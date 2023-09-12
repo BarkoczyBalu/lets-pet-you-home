@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+// Importing Font-Awesome
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/regular.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/brands.scss';
+
+//Importing Bootstrap and changing theme colors
+$primary: #735630;
+$secondary: #6E7953;
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary
+);
+
+@import '~bootstrap/scss/bootstrap';
+
+//Global styling
+*, body {
+  color: white;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,8 @@
+<figure *ngIf="pet.total > 0" (click)="openSpeciesDialog(pet.name)">
+  <img [src]="pet.img">
+  <div class="gradient"></div>
+  <figcaption>
+    <h3>{{ pet.name }}</h3>
+    <span class="total">{{ pet.total }}</span>
+  </figcaption>
+</figure>

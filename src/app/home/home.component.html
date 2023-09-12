@@ -1,0 +1,36 @@
+<header>
+  <h2><i class="fa-solid fa-house-chimney"></i> Lets Pet You Home</h2>
+</header>
+<main>
+  <app-pet-card *ngFor="let pet of pets" [pet]="pet"></app-pet-card>
+  <button type="button" 
+    class="btn btn-primary add-pet"
+    data-bs-toggle="offcanvas" 
+    data-bs-target="#offcanvasBottom" 
+    aria-controls="offcanvasBottom"
+  >
+    <i class="fa-solid fa-paw"></i>
+  </button>
+</main>
+
+<div class="offcanvas offcanvas-bottom bg-primary" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+  <div class="offcanvas-header justify-content-center">
+    <h5 class="offcanvas-title" id="offcanvasBottomLabel">Add New Pet</h5>
+  </div>
+  <div class="offcanvas-body">
+    <select class="form-select form-select-lg text-black" aria-label="Pet group selection" (change)="changeBreeds($event)">
+      <option *ngFor="let pet of pets" class="text-black" [value]="pet.id">{{ pet.name }}</option>
+    </select>
+    <div class="breed-card-row">
+      <div *ngFor="let breed of selectedPet.breeds" class="card text-center text-white" [ngClass]="{'is-selected': isSelectedBreed(breed)}" (click)="selectBreed(breed)">
+        <img [src]="breed.img" class="card-img-top rounded-circle">
+        <div class="card-body">
+          <h5 class="card-title">{{ breed.name }}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="d-grid">
+      <button class="btn btn-secondary" data-bs-dismiss="offcanvas" [disabled]="selectedBreeds.length < 1" (click)="addPets()">Add</button>
+    </div>
+  </div>
+</div>

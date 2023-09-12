@@ -1,0 +1,30 @@
+figure {
+  height: 20rem;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+
+  img {
+    height: inherit;
+    width: inherit;
+    position: relative;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  figcaption {
+    position: absolute;
+    left: 20px;
+    bottom: 30px;
+    color: white;
+  }
+
+  .gradient {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background: linear-gradient(to bottom, transparent 50%, black 100%);
+  }
+}

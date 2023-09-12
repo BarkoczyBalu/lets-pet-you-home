@@ -1,0 +1,81 @@
+header {
+  height: 50px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Dancing Script';
+  background-color: #735630;
+
+  h2 {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  
+  > app-pet-card {
+    margin: 0;
+    padding: 0;
+    flex-basis: 50%;
+
+    &:nth-child(odd):nth-last-child(2) {
+      flex-basis: 100%;
+    }
+  }
+
+  button.add-pet {
+    padding: 1rem;
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+    font-size: 2rem;
+    line-height: 1;
+    border-radius: 50%;
+  }
+}
+
+.offcanvas {
+  height: 40vh;
+
+  .offcanvas-body {
+    padding: 0 1rem;
+
+    .breed-card-row {
+      margin: 1rem 0;
+      display: flex;
+      gap: 0.5rem;
+    
+      .card {
+        max-width: 8rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    
+        .card-img-top {
+          width: 100px;
+          height: 100px;
+          padding: 0.25rem;
+          margin: auto;
+          margin-top: 10px;
+          object-fit: cover;
+        }
+  
+        &.is-selected {
+          background-color: white;
+  
+          .card-title {
+            color: #735630;
+          }
+        }
+      }
+    }
+  }
+
+}
