@@ -25,3 +25,7 @@ $theme-colors: (
 html {
   -webkit-tap-highlight-color: transparent;
 }
+
+body {
+  background-color: $secondary;
+}

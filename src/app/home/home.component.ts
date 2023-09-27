@@ -1,123 +1,136 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Breed, Pet } from '../../interfaces/pet';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Pet } from '../../interfaces/pet';
+import { PetService } from '../services/pet.service';
+import { Subscription } from 'rxjs';
+import { Breed } from 'src/interfaces/breed';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('offcanvasBottom') offcanvasBottom!: ElementRef;
 
-  public pets: Array<Pet> = [
-    {
-      id: 1,
-      name: 'Dogs',
-      img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-      total: 20,
-      breeds: [
-        {
-          name: 'Samoyed',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-        {
-          name: 'Shiba Inu',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-    {
-      id: 2,
-      name: 'Cats',
-      img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-      total: 10,
-      breeds: [
-        {
-          name: 'Ordinary House Cat',
-          img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-    {
-      id: 3,
-      name: 'Dogs',
-      img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-      total: 20,
-      breeds: [
-        {
-          name: 'Samoyed',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-        {
-          name: 'Shiba Inu',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-    {
-      id: 4,
-      name: 'Cats',
-      img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-      total: 10,
-      breeds: [
-        {
-          name: 'Ordinary House Cat',
-          img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-    {
-      id: 5,
-      name: 'Dogs',
-      img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-      total: 20,
-      breeds: [
-        {
-          name: 'Samoyed',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-        {
-          name: 'Shiba Inu',
-          img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-    {
-      id: 6,
-      name: 'Cats',
-      img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-      total: 10,
-      breeds: [
-        {
-          name: 'Ordinary House Cat',
-          img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-        },
-      ],
-      isDeletable: false,
-      isFavorite: true
-    },
-  ];
+  private subscriptions: Array<Subscription> = [];
+  
+  // Mock data
+  // public pets: Array<Pet> = [
+  //   {
+  //     id: '1',
+  //     name: 'Dogs',
+  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
+  //     total: 20,
+  //     breeds: [
+  //       {
+  //         name: 'Samoyed',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //       {
+  //         name: 'Shiba Inu',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Cats',
+  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
+  //     total: 10,
+  //     breeds: [
+  //       {
+  //         name: 'Ordinary House Cat',
+  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Dogs',
+  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
+  //     total: 20,
+  //     breeds: [
+  //       {
+  //         name: 'Samoyed',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //       {
+  //         name: 'Shiba Inu',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Cats',
+  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
+  //     total: 10,
+  //     breeds: [
+  //       {
+  //         name: 'Ordinary House Cat',
+  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  //   {
+  //     id: '5',
+  //     name: 'Dogs',
+  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
+  //     total: 20,
+  //     breeds: [
+  //       {
+  //         name: 'Samoyed',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //       {
+  //         name: 'Shiba Inu',
+  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  //   {
+  //     id: '6',
+  //     name: 'Cats',
+  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
+  //     total: 10,
+  //     breeds: [
+  //       {
+  //         name: 'Ordinary House Cat',
+  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
+  //       },
+  //     ],
+  //     isDeletable: false,
+  //     isFavorite: true
+  //   },
+  // ];
+  public pets: Array<Pet> = [];
 
-  public selectedPet: Pet = this.pets[0];
+  public selectedPet!: Pet;
   public selectedBreeds: Array<Breed> = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    public petService: PetService
+  ) { 
+    this.subscriptions.push(this.petService.getPets().subscribe((data) => {
+      this.pets = data;
+      this.selectedPet = data[0];
+    }));
   }
+
+  public ngOnInit(): void {}
   
-  public changeBreeds(e: any) {
-    const pet = this.pets.find((pet) => pet.id == e.target.value) ?? this.pets[0];
+  public changePets(id: string) {
+    const pet = this.pets.find((pet) => pet.id === id) ?? this.pets[0];
     this.selectedPet = pet;
   }
 
@@ -134,9 +147,22 @@ export class HomeComponent implements OnInit {
     return this.selectedBreeds.some((sbreed) => sbreed.name == breed.name);
   }
 
-  public addPets() {
+  public addBreed() {
+    this.petService.addBreed(this.selectedBreeds);
     this.selectedBreeds = [];
-    // console.log(this.offcanvasBottom.nativeElement);
-    // this.offcanvasBottom.nativeElement.hide();
+  }
+
+  public changeToBreedView(pet: Pet) {
+    this.selectedPet = pet;
+    this.petService.viewState = 'breed';
+  }
+
+  public changeToPetView() {
+    this.selectedPet = this.pets[0];
+    this.petService.viewState = 'pet';
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

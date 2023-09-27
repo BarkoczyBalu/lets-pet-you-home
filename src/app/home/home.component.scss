@@ -1,3 +1,5 @@
+@import '../../scss/variables.scss';
+
 header {
   height: 50px;
   position: sticky;
@@ -7,11 +9,28 @@ header {
   justify-content: center;
   align-items: center;
   font-family: 'Dancing Script';
-  background-color: #735630;
+  background-color: $primary-color;
 
   h2 {
     margin: 0;
     padding: 0;
+  }
+
+ button.back {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 20px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
   }
 }
 
@@ -19,6 +38,12 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
+
+  .no-pet {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+  }
   
   > app-pet-card {
     margin: 0;
@@ -31,26 +56,51 @@ main {
   }
 
   button.add-pet {
-    padding: 1rem;
+    padding: 0.9rem;
     position: fixed;
     bottom: 10%;
     right: 10%;
     font-size: 2rem;
     line-height: 1;
     border-radius: 50%;
+    border: 3px solid white;
   }
 }
 
 .offcanvas {
-  height: 40vh;
+  height: 45vh;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
 
   .offcanvas-body {
     padding: 0 1rem;
 
+    .badge-list {
+      display: flex;
+      gap: 1.5rem;
+
+      .badge {
+        font-size: 1.5rem;
+        padding: 1.2rem;
+        cursor: pointer;
+
+        &-selected {
+          background-color: white;
+          color: $secondary-color;
+
+          i {
+            color: $secondary-color;
+          }
+        }
+      }
+    }
+
     .breed-card-row {
       margin: 1rem 0;
+      padding-top: 0.5rem;
       display: flex;
       gap: 0.5rem;
+      border-top: 2px solid rgba(255,255,255,0.2);
     
       .card {
         max-width: 8rem;
@@ -67,11 +117,11 @@ main {
           object-fit: cover;
         }
   
-        &.is-selected {
+        &-selected {
           background-color: white;
   
           .card-title {
-            color: #735630;
+            color: $primary-color;
           }
         }
       }

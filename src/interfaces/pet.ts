@@ -1,14 +1,12 @@
+import { Breed } from "./breed";
+
 export interface Pet {
-  id: number;
+  id: string;
   name: string;
+  icon: string;
   img: string;
   total: number;
   breeds: Array<Breed>;
   isDeletable: boolean;
   isFavorite: boolean;
-}
-
-export interface Breed {
-  name: string;
-  img: string;
 }

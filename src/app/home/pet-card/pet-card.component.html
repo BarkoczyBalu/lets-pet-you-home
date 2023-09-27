@@ -1,8 +1,17 @@
-<figure *ngIf="pet.total > 0" (click)="openSpeciesDialog(pet.name)">
+<figure *ngIf="pet && pet.total > 0" (click)="changeToBreedView(pet)">
   <img [src]="pet.img">
   <div class="gradient"></div>
   <figcaption>
     <h3>{{ pet.name }}</h3>
     <span class="total">{{ pet.total }}</span>
+  </figcaption>
+</figure>
+
+<figure *ngIf="breed && breed.counter > 0">
+  <img [src]="breed.img">
+  <div class="gradient"></div>
+  <figcaption>
+    <h3>{{ breed.name }}</h3>
+    <span class="total">{{ breed.counter }}</span>
   </figcaption>
 </figure>

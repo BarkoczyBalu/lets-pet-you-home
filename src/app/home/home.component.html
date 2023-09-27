@@ -1,8 +1,19 @@
 <header>
-  <h2><i class="fa-solid fa-house-chimney"></i> Lets Pet You Home</h2>
+  <button *ngIf="petService.viewState === 'breed'" class="back" (click)="changeToPetView()"><i class="fa-solid fa-arrow-left"></i></button>
+  <h2>Lets Pet You Home</h2>
 </header>
 <main>
-  <app-pet-card *ngFor="let pet of pets" [pet]="pet"></app-pet-card>
+  <!-- <ng-container *ngIf="pets.length < 1">
+    <div class="no-pet">
+      <h1 class="no-pet-text">Let's add a new pajtás</h1>
+    </div>
+  </ng-container> -->
+  <ng-container *ngIf="petService.viewState === 'pet'">
+    <app-pet-card #petView *ngFor="let pet of pets" [pet]="pet" (stateChange)="changeToBreedView($event)"></app-pet-card>
+  </ng-container>
+  <ng-container *ngIf="petService.viewState === 'breed'">
+    <app-pet-card #breedView *ngFor="let breed of selectedPet?.breeds" [breed]="breed" (stateChange)="changeToBreedView($event)"></app-pet-card>
+  </ng-container>
   <button type="button" 
     class="btn btn-primary add-pet"
     data-bs-toggle="offcanvas" 
@@ -13,16 +24,23 @@
   </button>
 </main>
 
+<!-- Offcanvas -->
 <div class="offcanvas offcanvas-bottom bg-primary" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header justify-content-center">
     <h5 class="offcanvas-title" id="offcanvasBottomLabel">Add New Pet</h5>
   </div>
   <div class="offcanvas-body">
-    <select class="form-select form-select-lg text-black" aria-label="Pet group selection" (change)="changeBreeds($event)">
-      <option *ngFor="let pet of pets" class="text-black" [value]="pet.id">{{ pet.name }}</option>
-    </select>
+    <div class="badge-list">
+      <span *ngFor="let pet of pets" 
+        [ngClass]="{'badge-selected': selectedPet.id === pet.id, 'bg-secondary': selectedPet.id !== pet.id}" 
+        class="badge rounded-pill"
+        (click)="changePets(pet.id)">
+        <i [class]="'fa-solid fa-' + pet.icon"></i>
+        {{ pet.name }}
+      </span>
+    </div>
     <div class="breed-card-row">
-      <div *ngFor="let breed of selectedPet.breeds" class="card text-center text-white" [ngClass]="{'is-selected': isSelectedBreed(breed)}" (click)="selectBreed(breed)">
+      <div *ngFor="let breed of selectedPet?.breeds" class="card text-center text-white" [ngClass]="{'card-selected': isSelectedBreed(breed)}" (click)="selectBreed(breed)">
         <img [src]="breed.img" class="card-img-top rounded-circle">
         <div class="card-body">
           <h5 class="card-title">{{ breed.name }}</h5>
@@ -30,7 +48,7 @@
       </div>
     </div>
     <div class="d-grid">
-      <button class="btn btn-secondary" data-bs-dismiss="offcanvas" [disabled]="selectedBreeds.length < 1" (click)="addPets()">Add</button>
+      <button class="btn btn-secondary" data-bs-dismiss="offcanvas" [disabled]="selectedBreeds.length < 1" (click)="addBreed()">Add</button>
     </div>
   </div>
 </div>

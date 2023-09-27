@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Breed } from 'src/interfaces/breed';
 import { Pet } from 'src/interfaces/pet';
 
 @Component({
@@ -7,15 +8,17 @@ import { Pet } from 'src/interfaces/pet';
   styleUrls: ['./pet-card.component.scss']
 })
 export class PetCardComponent implements OnInit {
-  @Input() pet!: Pet;
+  @Input() pet: Pet | undefined;
+  @Input() breed: Breed | undefined;
+
+  @Output() stateChange = new EventEmitter();
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  public openSpeciesDialog(name: string): void {
-    alert(`${name} dialog opened`);
+  public changeToBreedView(pet: Pet): void {
+    this.stateChange.emit(pet);
   }
 
 }

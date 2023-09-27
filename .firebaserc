@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "lets-pet-you-home": {
+      "hosting": {
+        "lets-pet-you-home": [
+          "lets-pet-you-home"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "lets-pet-you-home"
+  }
+}
