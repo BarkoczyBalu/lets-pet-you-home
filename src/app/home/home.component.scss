@@ -68,7 +68,7 @@ main {
 }
 
 .offcanvas {
-  height: 45vh;
+  height: 50vh;
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
 
@@ -101,9 +101,11 @@ main {
       display: flex;
       gap: 0.5rem;
       border-top: 2px solid rgba(255,255,255,0.2);
+      overflow-y: auto;
     
       .card {
         max-width: 8rem;
+        min-width: auto;
         background-color: transparent;
         border: none;
         cursor: pointer;
@@ -122,6 +124,7 @@ main {
   
           .card-title {
             color: $primary-color;
+            word-wrap: normal;
           }
         }
       }

@@ -8,11 +8,11 @@
       <h1 class="no-pet-text">Let's add a new pajtás</h1>
     </div>
   </ng-container> -->
-  <ng-container *ngIf="petService.viewState === 'pet'">
-    <app-pet-card #petView *ngFor="let pet of pets" [pet]="pet" (stateChange)="changeToBreedView($event)"></app-pet-card>
+  <ng-container *ngFor="let pet of pets">
+    <app-pet-card #petView *ngIf="petService.viewState === 'pet' && pet && pet.total > 0" [pet]="pet" (stateChange)="changeToBreedView($event)"></app-pet-card>
   </ng-container>
-  <ng-container *ngIf="petService.viewState === 'breed'">
-    <app-pet-card #breedView *ngFor="let breed of selectedPet?.breeds" [breed]="breed" (stateChange)="changeToBreedView($event)"></app-pet-card>
+  <ng-container *ngFor="let breed of selectedPet?.breeds">
+    <app-pet-card #breedView *ngIf="petService.viewState === 'breed' && breed && breed.counter > 0" [breed]="breed" (stateChange)="changeToBreedView($event)"></app-pet-card>
   </ng-container>
   <button type="button" 
     class="btn btn-primary add-pet"

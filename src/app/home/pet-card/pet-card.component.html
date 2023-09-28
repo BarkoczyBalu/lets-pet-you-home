@@ -1,4 +1,4 @@
-<figure *ngIf="pet && pet.total > 0" (click)="changeToBreedView(pet)">
+<figure *ngIf="pet" (click)="changeToBreedView(pet)">
   <img [src]="pet.img">
   <div class="gradient"></div>
   <figcaption>
@@ -7,7 +7,7 @@
   </figcaption>
 </figure>
 
-<figure *ngIf="breed && breed.counter > 0">
+<figure *ngIf="breed">
   <img [src]="breed.img">
   <div class="gradient"></div>
   <figcaption>
