@@ -72,45 +72,65 @@ main {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
 
-  .offcanvas-body {
-    padding: 0 1rem;
+  .offcanvas-header {
+    padding-bottom: 0;
 
     .badge-list {
       display: flex;
-      gap: 1.5rem;
-
+      gap: 1rem;
+      overflow-y: auto;
+  
       .badge {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         padding: 1.2rem;
         cursor: pointer;
-
+  
         &-selected {
           background-color: white;
           color: $secondary-color;
-
+  
           i {
             color: $secondary-color;
           }
         }
       }
     }
+  }
+
+  .offcanvas-body {
+    padding: 0 1rem;
 
     .breed-card-row {
       margin: 1rem 0;
-      padding-top: 0.5rem;
+      padding: 1.25rem 1.25rem 0 0;
       display: flex;
-      gap: 0.5rem;
+      gap: 1.5rem;
       border-top: 2px solid rgba(255,255,255,0.2);
       overflow-y: auto;
     
       .card {
         max-width: 8rem;
-        min-width: auto;
+        min-width: 120px;
+        height: 200px;
         background-color: transparent;
         border: none;
         cursor: pointer;
+
+        span.badge {
+          &.badge-counter {
+            left: 30px;
+            top: 92px;
+            font-size: 1rem;
+          }
+          
+          &.badge-delete {
+            i {
+              font-size: 1.5rem;
+            }
+          }
+        }
     
-        .card-img-top {
+        &-img-top {
           width: 100px;
           height: 100px;
           padding: 0.25rem;
@@ -118,17 +138,39 @@ main {
           margin-top: 10px;
           object-fit: cover;
         }
+
+        &-title {
+          word-wrap: normal;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
   
         &-selected {
           background-color: white;
   
           .card-title {
             color: $primary-color;
-            word-wrap: normal;
           }
         }
       }
     }
   }
+}
 
+.modal {
+
+  .modal-content {
+    background-color: $secondary-color;
+  
+    .modal-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+
+      span, i {
+        font-size: 2rem;
+      }
+    }
+  }
 }

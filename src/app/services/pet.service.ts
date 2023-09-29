@@ -25,6 +25,12 @@ export class PetService {
         const petsBreedCollection = this.afs.collection<Breed>('breeds', ref => ref.where('petId', "==", pet.id));
         
         petsBreedCollection.valueChanges()
+          .pipe(
+            map((breeds) => breeds.map((breed) => {
+              breed.addCounter = 0;
+              return breed;
+            }))
+          )
           .subscribe((breeds) => {
             convertedPet.breeds = breeds;
             convertedPet.total = breeds.reduce((sum, breed) => sum + breed.counter, 0);
@@ -47,9 +53,9 @@ export class PetService {
   }
 
   public addBreed(selectedBreeds: Array<Breed>) {
-    console.log(selectedBreeds);
     selectedBreeds.forEach(async (breed) => {
-      breed.counter++;
+      breed.counter += breed.addCounter!;
+      delete(breed.addCounter);
       await this.afs.doc('breeds/' + breed.id).update(breed);
     });
   }

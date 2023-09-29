@@ -4,4 +4,5 @@ export interface Breed {
   name: string;
   img: string;
   counter: number;
+  addCounter?: number;
 }

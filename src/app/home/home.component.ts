@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Pet } from '../../interfaces/pet';
 import { PetService } from '../services/pet.service';
 import { Subscription } from 'rxjs';
@@ -10,8 +10,6 @@ import { Breed } from 'src/interfaces/breed';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @ViewChild('offcanvasBottom') offcanvasBottom!: ElementRef;
-
   private subscriptions: Array<Subscription> = [];
   
   // Mock data
@@ -116,6 +114,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public pets: Array<Pet> = [];
 
   public selectedPet!: Pet;
+  public selectedBreed?: Breed;
   public selectedBreeds: Array<Breed> = [];
 
   constructor(
@@ -124,6 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.petService.getPets().subscribe((data) => {
       this.pets = data;
       this.selectedPet = data[0];
+      this.selectedBreed = this.selectedPet.breeds[0];
     }));
   }
 
@@ -134,12 +134,40 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.selectedPet = pet;
   }
 
+  // public selectBreed(breed: Breed) {
+  //   if (this.selectedBreeds.some((sbreed) => sbreed.name == breed.name)) {
+  //     const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == breed.name)!);
+  //     this.selectedBreeds.splice(index,1);
+  //   } else {
+  //     this.selectedBreeds.push(breed);
+  //   }
+  // }
+
   public selectBreed(breed: Breed) {
-    if (this.selectedBreeds.some((sbreed) => sbreed.name == breed.name)) {
-      const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == breed.name)!);
+    this.selectedBreed = breed;
+  }
+
+  public increaseAddCounter() {
+    if (this.selectedBreed) this.selectedBreed.addCounter!++;
+  }
+
+  public decreaseAddCounter() {
+    if (this.selectedBreed && this.selectedBreed.addCounter! > 1) this.selectedBreed.addCounter!--;
+  }
+
+  public addBreedToSelectedBreeds() {
+    if (this.selectedBreeds.some((sbreed) => sbreed.name == this.selectedBreed!.name)) {
+      const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == this.selectedBreed!.name)!);
       this.selectedBreeds.splice(index,1);
     } else {
-      this.selectedBreeds.push(breed);
+      this.selectedBreeds.push(this.selectedBreed!);
+    }
+  }
+
+  public removeBreedFromSelectedBreeds(breed: Breed) {
+    if (this.selectedBreeds.some((sbreed) => sbreed.name == this.selectedBreed!.name)) {
+      const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == this.selectedBreed!.name)!);
+      this.selectedBreeds.splice(index,1);
     }
   }
 

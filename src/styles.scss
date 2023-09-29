@@ -9,10 +9,12 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 //Importing Bootstrap and changing theme colors
 $primary: #735630;
 $secondary: #6E7953;
+$danger: #dc3545;
 
 $theme-colors: (
   "primary": $primary,
-  "secondary": $secondary
+  "secondary": $secondary,
+  "danger": $danger,
 );
 
 @import '~bootstrap/scss/bootstrap';
