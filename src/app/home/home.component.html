@@ -30,7 +30,7 @@
     <div class="badge-list">
       <ng-container *ngFor="let pet of pets">
         <span  
-          *ngIf="pet.breeds.length > 0"
+          *ngIf="pet.breeds && pet.breeds.length > 0"
           [ngClass]="{'badge-selected': selectedPet.id === pet.id, 'bg-secondary': selectedPet.id !== pet.id}" 
           class="badge rounded-pill"
           (click)="changePets(pet.id)">
@@ -43,21 +43,36 @@
   <div class="offcanvas-body">
     <div class="breed-card-row">
       <div 
-        *ngFor="let breed of selectedPet?.breeds" 
+        *ngFor="let breed of selectedPet?.breeds"
         class="card text-center text-white" 
-        [ngClass]="{'card-selected': isSelectedBreed(breed)}" 
-        data-bs-toggle="modal" 
-        data-bs-target="#counterModal"
-        (click)="selectBreed(breed)"
+        [ngClass]="{'card-selected': breed.addCounter! > 0}" 
       >
-        <img [src]="breed.img" class="card-img-top rounded-circle">
-        <div class="card-body">
-          <h5 class="card-title">{{ breed.name }}</h5>
+        <div
+          data-bs-toggle="modal" 
+          data-bs-target="#counterModal"
+          (click)="selectBreed(breed)"
+        >
+          <img [src]="breed.img" class="card-img-top rounded-circle">
+          <div class="card-body">
+            <h5 class="card-title">{{ breed.name }}</h5>
+          </div>
         </div>
         <span *ngIf="breed.addCounter" [ngClass]="breed.addCounter > 9 ? 'rounded-pill' : 'rounded-circle'" class="position-absolute translate-middle badge badge-counter bg-secondary">
           {{ breed.addCounter }}
         </span>
-        <span *ngIf="breed.addCounter" class="position-absolute top-0 start-100 translate-middle badge badge-delete rounded-circle bg-danger" (click)="removeBreedFromSelectedBreeds(breed)">
+        <span 
+          *ngIf="breed.addCounter" 
+          class="
+            position-absolute 
+            top-0 
+            start-100 
+            translate-middle 
+            badge badge-delete 
+            rounded-circle 
+            bg-danger
+          " 
+          (click)="removeBreedFromSelectedBreeds(breed)"
+        >
           <i class="fa-solid fa-close"></i>
         </span>
       </div>
@@ -69,7 +84,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="counterModal" tabindex="-1" aria-labelledby="counterModalLabel" aria-hidden="true">
+<div #counterModal class="modal fade" id="counterModal" tabindex="-1" aria-labelledby="counterModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -80,9 +95,6 @@
         <button class="btn btn-primary" (click)="decreaseAddCounter()"><i class="fa-solid fa-minus"></i></button>
         <span>{{ selectedBreed?.addCounter }}</span>
         <button class="btn btn-primary" (click)="increaseAddCounter()"><i class="fa-solid fa-plus"></i></button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="addBreedToSelectedBreeds()">Add</button>
       </div>
     </div>
   </div>

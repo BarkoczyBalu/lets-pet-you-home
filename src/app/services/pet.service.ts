@@ -17,6 +17,14 @@ export class PetService {
   constructor(private afs: AngularFirestore) { }
 
   public getPets(): Observable<Array<Pet>> {
+    const compareFn = (a: any, b:any) => {
+      if (a.name < b.name)
+        return -1;
+      if (a.name > b.name)
+        return 1;
+      return 0;
+    };
+
     return this.petsCollection.get().pipe(
       map((pets) => pets.docs.map((pet) => {
         const convertedPet = pet.data();
@@ -29,7 +37,7 @@ export class PetService {
             map((breeds) => breeds.map((breed) => {
               breed.addCounter = 0;
               return breed;
-            }))
+            }).sort(compareFn))
           )
           .subscribe((breeds) => {
             convertedPet.breeds = breeds;
@@ -38,7 +46,7 @@ export class PetService {
           ;
         
         return convertedPet;
-      }))
+      }).sort(compareFn))
     );
   }
 
