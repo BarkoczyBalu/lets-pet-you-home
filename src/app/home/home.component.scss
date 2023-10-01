@@ -161,6 +161,17 @@ main {
 
   .modal-content {
     background-color: $secondary-color;
+
+    .modal-header {
+      border: none;
+    }
+
+    .divider {
+      width: 60%;
+      height: 2px;
+      background-color: white;
+      border-radius: 10px;
+    }
   
     .modal-body {
       display: flex;

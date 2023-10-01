@@ -140,15 +140,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedPet = pet;
   }
 
-  // public selectBreed(breed: Breed) {
-  //   if (this.selectedBreeds.some((sbreed) => sbreed.name == breed.name)) {
-  //     const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == breed.name)!);
-  //     this.selectedBreeds.splice(index,1);
-  //   } else {
-  //     this.selectedBreeds.push(breed);
-  //   }
-  // }
-
   public selectBreed(breed: Breed) {
     this.selectedBreed = breed;
   }
