@@ -139,7 +139,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.pets = data;
       this.selectedPet = data[0];
       this.petService.getUserPets(data);
-      console.log(this.pets);
     }));
     this.subscriptions.push(this.petService.viewState.subscribe(view => {
       if (view === 'pet') this.selectedPet = this.pets[0];
