@@ -3,6 +3,6 @@ export interface Breed {
   petId: string;
   name: string;
   img: string;
-  counter: number;
+  counter?: number;
   addCounter?: number;
 }

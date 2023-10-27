@@ -1,39 +1,5 @@
 @import '../../scss/variables.scss';
 
-header {
-  height: 50px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Dancing Script';
-  background-color: $primary-color;
-
-  h2 {
-    margin: 0;
-    padding: 0;
-  }
-
- button.back {
-    height: 30px;
-    width: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 20px;
-    background-color: transparent;
-    border: none;
-    border-radius: 50%;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-}
-
 main {
   display: flex;
   flex-wrap: wrap;

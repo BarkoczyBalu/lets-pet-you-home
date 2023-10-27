@@ -1,0 +1,6 @@
+<header>
+  <button *ngIf="view === 'breed'" class="back" (click)="changeToPetView()"><i class="fa-solid fa-arrow-left"></i></button>
+  <h2>Lets Pet You Home</h2>
+  <button *ngIf="authService.user" class="user"><i class="fa-solid fa-arrow-right-from-bracket" (click)="logoutUser()"></i></button>
+  <!-- <button *ngIf="authService.isLoggedIn" class="user"><i class="fa-regular fa-user" (click)="logoutUser()"></i></button> -->
+</header>

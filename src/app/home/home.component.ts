@@ -3,6 +3,8 @@ import { Pet } from '../../interfaces/pet';
 import { PetService } from '../services/pet.service';
 import { Subscription } from 'rxjs';
 import { Breed } from 'src/interfaces/breed';
+import { Record } from 'src/interfaces/record';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -113,25 +115,45 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   },
   // ];
   public pets: Array<Pet> = [];
+  public view: 'pet' | 'breed' = 'pet';
 
   public selectedPet!: Pet;
   public selectedBreed?: Breed;
   public selectedBreeds: Array<Breed> = [];
+  public newRecord: Record = {
+    userId: '',
+    breeds: {}
+  };
+
+  public get newRecordBreedsLength(): number {
+    return Object.keys(this.newRecord.breeds).length;
+  }
+  
+  public addCounter: number = 0;
 
   constructor(
+    public authService: AuthService,
     public petService: PetService
   ) { 
     this.subscriptions.push(this.petService.getPets().subscribe((data) => {
       this.pets = data;
       this.selectedPet = data[0];
+      this.petService.getUserPets(data);
+      console.log(this.pets);
+    }));
+    this.subscriptions.push(this.petService.viewState.subscribe(view => {
+      if (view === 'pet') this.selectedPet = this.pets[0];
+      this.view = view;
     }));
   }
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    this.newRecord.userId = this.authService.user!.uid;
+  }
 
   public ngAfterViewInit(): void {
     this.counterModal?.nativeElement.addEventListener('hide.bs.modal', (e: any) => {
-      this.addBreedToSelectedBreeds();
+      this.addBreedToRecord();
     });
   }
   
@@ -141,52 +163,43 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public selectBreed(breed: Breed) {
+    const breedCounterInRecord = this.newRecord!.breeds[breed.id];
+    if(breedCounterInRecord) this.addCounter = breedCounterInRecord;
     this.selectedBreed = breed;
+
   }
 
   public increaseAddCounter() {
-    if (this.selectedBreed) this.selectedBreed.addCounter!++;
+    if (this.selectedBreed) this.addCounter++;
   }
 
   public decreaseAddCounter() {
-    if (this.selectedBreed && this.selectedBreed.addCounter! > 0) this.selectedBreed.addCounter!--;
+    if (this.selectedBreed && this.addCounter > 0) this.addCounter--;
   }
 
-  public addBreedToSelectedBreeds() {
-    const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == this.selectedBreed!.name)!);
-    if (!this.selectedBreed?.addCounter) {
-      this.selectedBreeds.splice(index,1);
-    } else {
-      if (this.selectedBreeds.some((sbreed) => sbreed.name == this.selectedBreed!.name)) this.selectedBreeds.splice(index,1);
-      this.selectedBreeds.push(this.selectedBreed!);
-    }
+  public addBreedToRecord() {
+    if (this.addCounter === 0) {
+      delete(this.newRecord!.breeds[this.selectedBreed!.id]);
+      return;
+    };
+
+    this.newRecord!.breeds[this.selectedBreed!.id] = this.addCounter;
+    setTimeout(() => this.addCounter = 0, 200);
   }
 
-  public removeBreedFromSelectedBreeds(breed: Breed) {
-    if (this.selectedBreeds.some((sbreed) => sbreed.name == breed.name)) {
-      const index = this.selectedBreeds.indexOf(this.selectedBreeds.find((sbreed) => sbreed.name == breed.name)!);
-      this.selectedBreeds.splice(index,1);
-      breed.addCounter = 0;
-    }
+  public removeBreedFromRecord(breed: Breed) {
+    if (this.newRecord.breeds[breed.id]) delete(this.newRecord.breeds[breed.id]);
   }
 
-  public isSelectedBreed(breed: Breed): boolean {
-    return this.selectedBreeds.some((sbreed) => sbreed.name == breed.name);
-  }
-
-  public addBreed() {
-    this.petService.addBreed(this.selectedBreeds);
-    this.selectedBreeds = [];
+  public addRecord() {
+    this.petService.addRecord(this.newRecord, new Date().toISOString());
+    this.newRecord.breeds = {};
+    this.petService.getUserPets(this.pets);
   }
 
   public changeToBreedView(pet: Pet) {
     this.selectedPet = pet;
-    this.petService.viewState = 'breed';
-  }
-
-  public changeToPetView() {
-    this.selectedPet = this.pets[0];
-    this.petService.viewState = 'pet';
+    this.petService.viewState.next('breed');
   }
 
   public ngOnDestroy(): void {
