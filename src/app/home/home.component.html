@@ -7,7 +7,7 @@
   <ng-container *ngFor="let pet of pets">
     <app-pet-card #petView *ngIf="view === 'pet' && pet && pet.total > 0" [pet]="pet" (stateChange)="changeToBreedView($event)"></app-pet-card>
   </ng-container>
-  <ng-container *ngFor="let breed of selectedPet?.breeds">
+  <ng-container *ngFor="let breed of selectedPet?.ownedBreeds">
     <app-pet-card #breedView *ngIf="view === 'breed' && breed && breed.counter" [breed]="breed" (stateChange)="changeToBreedView($event)"></app-pet-card>
   </ng-container>
   <button type="button" 

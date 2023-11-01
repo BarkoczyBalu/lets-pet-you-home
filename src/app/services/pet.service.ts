@@ -30,6 +30,14 @@ export class PetService {
     return 0;
   };
 
+  private sortByCounter(a: any, b:any) {
+    if (a.counter > b.counter)
+      return -1;
+    if (a.counter < b.counter)
+      return 1;
+    return 0;
+  };
+
   public async getUserPets(allPets: Array<Pet>): Promise<any> {
     this.recordsCollection = this.afs.collection<Record>('records', ref => ref.where('userId', "==", this.authService.user?.uid));
     let userBreeds: any = {};
@@ -51,30 +59,11 @@ export class PetService {
             if (breed.counter) delete(breed.counter);
             if (userBreeds[breed.id]) breed.counter = userBreeds[breed.id];
           });
+          pet.ownedBreeds = pet.breeds.filter(breed => breed.counter).sort(this.sortByCounter);
           pet.total = pet.breeds.reduce((sum, breed) => breed.counter ? (sum + breed.counter) : sum, 0);
         });
       }))
     ).subscribe(() => allPets);
-
-    // return this.petsCollection.get().pipe(
-    //   map((pets) => pets.docs.map((pet) => {
-    //     const convertedPet = pet.data();
-    //     convertedPet.id = pet.id;
-
-    //     const petsBreedCollection = this.afs.collection<Breed>('breeds', ref => ref.where('petId', "==", pet.id));
-        
-    //     petsBreedCollection.valueChanges({ idField: 'id' })
-    //       .pipe(
-    //         map((breeds) => breeds.sort(this.sortByName))
-    //       )
-    //       .subscribe((breeds) => {
-    //         convertedPet.breeds = breeds;
-    //         convertedPet.total = breeds.reduce((sum, breed) => sum + breed.counter, 0);
-    //       });
-        
-    //     return convertedPet;
-    //   }).sort(this.sortByName))
-    // );
   }
 
   public getPets(): Observable<Array<Pet>> {
