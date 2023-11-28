@@ -1,4 +1,8 @@
 export interface Record {
-  userId: string;
-  breeds: {[key: string]: number};
+  userId?: string;
+  date?: string;
+  time?: string;
+  datetime?: string;
+  breeds: {[breedId: string]: number};
 }
+

@@ -21,4 +21,8 @@ export class PetCardComponent implements OnInit {
     this.stateChange.emit(pet);
   }
 
+  public openBreedRecords(breed: Breed): void {
+    this.stateChange.emit(breed);
+  }
+
 }

@@ -7,7 +7,7 @@
   </figcaption>
 </figure>
 
-<figure *ngIf="breed">
+<figure *ngIf="breed" (click)="openBreedRecords(breed)">
   <img [src]="breed.img">
   <div class="gradient"></div>
   <figcaption>

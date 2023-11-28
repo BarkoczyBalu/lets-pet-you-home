@@ -8,7 +8,7 @@
     <app-pet-card #petView *ngIf="view === 'pet' && pet && pet.total > 0" [pet]="pet" (stateChange)="changeToBreedView($event)"></app-pet-card>
   </ng-container>
   <ng-container *ngFor="let breed of selectedPet?.ownedBreeds">
-    <app-pet-card #breedView *ngIf="view === 'breed' && breed && breed.counter" [breed]="breed" (stateChange)="changeToBreedView($event)"></app-pet-card>
+    <app-pet-card #breedView *ngIf="view === 'breed' && breed && breed.counter" [breed]="breed" data-bs-target="#timelineModal" (stateChange)="openBreedRecords($event)"></app-pet-card>
   </ng-container>
   <button type="button" 
     class="btn btn-primary add-pet"
@@ -71,7 +71,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Counter Modal -->
 <div #counterModal class="modal fade" id="counterModal" tabindex="-1" aria-labelledby="counterModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -81,10 +81,36 @@
       <div class="d-flex justify-content-center">
         <div class="divider"></div>
       </div>
-      <div class="modal-body">
+      <div class="modal-body counter">
         <button class="btn btn-primary" (click)="decreaseAddCounter()"><i class="fa-solid fa-minus"></i></button>
         <span>{{ addCounter }}</span>
         <button class="btn btn-primary" (click)="increaseAddCounter()"><i class="fa-solid fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Timeline Modal -->
+<div #timelineModal class="modal fade" id="timelineModal" tabindex="-1" aria-labelledby="timelineModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title" id="timelineModalLabel">{{ selectedBreed?.name }}</h5>
+      </div>
+      <div class="modal-body timeline">
+        <div *ngFor="let record of selectedBreedRecords; let i = index" class="timeline-record">
+          <div class="timeline-record-marker">
+            <div class="timeline-record-marker-circle"></div>
+            <div *ngIf="selectedBreedRecords!.length > (i + 1)" class="timeline-record-marker-connector"></div>
+          </div>
+          <div>
+            <div class="paw-holder">
+              <i *ngFor="let paw of record.breeds[selectedBreed!.id] | numberToArray" class="fa-solid fa-paw"></i>
+            </div>
+            <p>{{ record.date }}</p>
+            <p>{{ record.time }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

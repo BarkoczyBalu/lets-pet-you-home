@@ -6,6 +6,8 @@ import { Breed } from 'src/interfaces/breed';
 import { Record } from 'src/interfaces/record';
 import { AuthService } from '../services/auth.service';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -13,7 +15,9 @@ import { AuthService } from '../services/auth.service';
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
+  @ViewChild('offcanvasBottom') offcanvasBottom?: ElementRef;
   @ViewChild('counterModal') counterModal?: ElementRef;
+  @ViewChild('timelineModal') timelineModal?: ElementRef;
   
   // Mock data
   // public pets: Array<Pet> = [
@@ -119,6 +123,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public selectedPet!: Pet;
   public selectedBreed?: Breed;
+  public selectedBreedRecords?: Record[];
   public selectedBreeds: Array<Breed> = [];
   public newRecord: Record = {
     userId: '',
@@ -151,8 +156,18 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit(): void {
+    const resetSelectedBreed = () => setTimeout(() => this.selectedBreed = undefined, 200);
+
+    this.offcanvasBottom?.nativeElement.addEventListener('hide.bs.offcanvas', (e: any) => {
+      resetSelectedBreed();
+    });
+
     this.counterModal?.nativeElement.addEventListener('hide.bs.modal', (e: any) => {
       this.addBreedToRecord();
+    });
+
+    this.timelineModal?.nativeElement.addEventListener('hide.bs.modal', (e: any) => {
+      resetSelectedBreed();
     });
   }
   
@@ -199,6 +214,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public changeToBreedView(pet: Pet) {
     this.selectedPet = pet;
     this.petService.viewState.next('breed');
+  }
+
+  public openBreedRecords(breed: Breed) {
+    this.selectedBreed = breed;
+
+    this.subscriptions.push(
+      this.petService.getBreedRecords(breed.id).subscribe((data) => {
+        this.selectedBreedRecords = data;
+      })
+    );
+
+    const timelineModal = new bootstrap.Modal(document.getElementById('timelineModal'), {});
+    timelineModal.show();
   }
 
   public ngOnDestroy(): void {

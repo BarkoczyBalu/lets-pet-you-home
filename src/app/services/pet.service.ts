@@ -97,6 +97,25 @@ export class PetService {
     );
   }
 
+  public getBreedRecords(breedId: string): Observable<Record[]> {
+    return this.recordsCollection.get().pipe(
+      map((records) => {
+        const filteredRecords = records.docs.filter((record) => Object.keys(record.data().breeds).includes(breedId));
+        return filteredRecords.map((record) => {
+          const convertedRecord = record.data();
+          delete(convertedRecord.userId);
+          const date = record.id.slice(0, 10).replace(/-/g, '/');
+          const time = record.id.slice(11, 19);
+
+          convertedRecord.date = date;
+          convertedRecord.time = time;
+          convertedRecord.datetime = date + ' ' + time;
+          return convertedRecord;
+        });
+      })
+    );
+  }
+
   public async addRecord(record: Record, date: string) {
     await this.afs.collection('records').doc(date).set(record);
 
