@@ -101,11 +101,14 @@ export class PetService {
     return this.recordsCollection.get().pipe(
       map((records) => {
         const filteredRecords = records.docs.filter((record) => Object.keys(record.data().breeds).includes(breedId));
+        filteredRecords.reverse();
         return filteredRecords.map((record) => {
           const convertedRecord = record.data();
           delete(convertedRecord.userId);
+
           const date = record.id.slice(0, 10).replace(/-/g, '/');
-          const time = record.id.slice(11, 19);
+          const hour = parseInt(record.id.slice(11,13));
+          const time = hour === 23 ? ('00' + record.id.slice(13, 19)) : ((hour + 1).toString() + record.id.slice(13, 19));
 
           convertedRecord.date = date;
           convertedRecord.time = time;

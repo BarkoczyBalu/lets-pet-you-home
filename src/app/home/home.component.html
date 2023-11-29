@@ -16,7 +16,7 @@
     data-bs-target="#offcanvasBottom" 
     aria-controls="offcanvasBottom"
   >
-    <i class="fa-solid fa-paw"></i>
+    <i class="fa-solid fa-plus"></i>
   </button>
 </main>
 
@@ -105,7 +105,12 @@
           </div>
           <div>
             <div class="paw-holder">
-              <i *ngFor="let paw of record.breeds[selectedBreed!.id] | numberToArray" class="fa-solid fa-paw"></i>
+              <ng-container *ngIf="(record.breeds[selectedBreed!.id] | numberToArray).length < 6">
+                <i *ngFor="let paw of record.breeds[selectedBreed!.id] | numberToArray" class="fa-solid fa-paw"></i>
+              </ng-container>
+              <ng-container *ngIf="(record.breeds[selectedBreed!.id] | numberToArray).length > 5">
+                <i class="fa-solid fa-paw"></i> x {{ record.breeds[selectedBreed!.id] }}
+              </ng-container>
             </div>
             <p>{{ record.date }}</p>
             <p>{{ record.time }}</p>
