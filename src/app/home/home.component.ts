@@ -122,6 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public view: 'pet' | 'breed' = 'pet';
 
   public selectedPet!: Pet;
+  public selectedPetBadge!: Pet;
   public selectedBreed?: Breed;
   public selectedBreedRecords?: Record[];
   public selectedBreeds: Array<Breed> = [];
@@ -142,11 +143,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { 
     this.subscriptions.push(this.petService.getPets().subscribe((data) => {
       this.pets = data;
-      this.selectedPet = data.find(pet => pet.name === 'Dogs') ?? data[0];
+      this.selectedPetBadge = data.find(pet => pet.name === 'Dogs') ?? data[0];
       this.petService.getUserPets(data);
     }));
     this.subscriptions.push(this.petService.viewState.subscribe(view => {
-      if (view === 'pet') this.selectedPet = this.pets.find(pet => pet.name === 'Dogs') ?? this.pets[0];
+      if (view === 'pet') this.selectedPetBadge = this.pets.find(pet => pet.name === 'Dogs') ?? this.pets[0];
       this.view = view;
     }));
   }
@@ -173,7 +174,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   
   public changePets(id: string) {
     const pet = this.pets.find((pet) => pet.id === id) ?? this.pets[0];
-    this.selectedPet = pet;
+    this.selectedPetBadge = pet;
   }
 
   public selectBreed(breed: Breed) {

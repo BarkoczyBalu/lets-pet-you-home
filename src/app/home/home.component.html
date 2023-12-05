@@ -27,7 +27,7 @@
       <ng-container *ngFor="let pet of pets">
         <span  
           *ngIf="pet.breeds && pet.breeds.length > 0"
-          [ngClass]="{'badge-selected': selectedPet.id === pet.id, 'bg-secondary': selectedPet.id !== pet.id}" 
+          [ngClass]="{'badge-selected': selectedPetBadge.id === pet.id, 'bg-secondary': selectedPetBadge.id !== pet.id}" 
           class="badge rounded-pill"
           (click)="changePets(pet.id)">
           <i [class]="'fa-solid fa-' + (pet.icon ?? 'paw')"></i>
@@ -39,7 +39,7 @@
   <div class="offcanvas-body">
     <div class="breed-card-row">
       <div 
-        *ngFor="let breed of selectedPet?.breeds"
+        *ngFor="let breed of selectedPetBadge?.breeds"
         class="card text-center text-white" 
         [ngClass]="{'card-selected': newRecord.breeds[breed.id] > 0}" 
       >
