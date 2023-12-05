@@ -206,6 +206,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public addRecord() {
+    delete(this.newRecord.location);
+    navigator.geolocation.getCurrentPosition(this.allowedPosition, this.deniedPosition);
+  }
+
+  private allowedPosition = (pos: GeolocationPosition) => {
+    this.newRecord.location = { lat: pos.coords.latitude, long: pos.coords.longitude };
+    this.deniedPosition();
+  }
+  
+  private deniedPosition = () => {
     this.petService.addRecord(this.newRecord, new Date().toISOString());
     this.newRecord.breeds = {};
     this.petService.getUserPets(this.pets);
