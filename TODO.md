@@ -2,6 +2,7 @@
 
 ## TODO
 
+1. Making it into a PWA
 1. Modal Heading styling
 1. Making a menu
 1. Profile page - Profile pic, username, fav pet, fav breed

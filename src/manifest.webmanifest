@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Let's Pet You Home",
+  "short_name": "Let's Pet You Home",
+  "description": "Let's get your favorite pets home!",
+  "theme_color": "#1976d2",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "scope": "./",
+  "start_url": "./home",
+  "icons": [
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
