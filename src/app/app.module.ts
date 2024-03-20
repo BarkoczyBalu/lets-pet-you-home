@@ -31,6 +31,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AppRoutingModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule.enablePersistence(),
     AngularFireAnalyticsModule,
     AngularFirestoreModule,
     ReactiveFormsModule,
