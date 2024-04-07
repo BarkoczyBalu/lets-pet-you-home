@@ -163,10 +163,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       resetSelectedBreed();
     });
 
-    this.counterModal?.nativeElement.addEventListener('hide.bs.modal', (e: any) => {
-      this.addBreedToRecord();
-    });
-
     this.timelineModal?.nativeElement.addEventListener('hide.bs.modal', (e: any) => {
       resetSelectedBreed();
     });
@@ -177,29 +173,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedPetBadge = pet;
   }
 
-  public selectBreed(breed: Breed) {
-    const breedCounterInRecord = this.newRecord!.breeds[breed.id];
-    if(breedCounterInRecord) this.addCounter = breedCounterInRecord;
+  public addBreedToRecord(breed: Breed) {
+    if (!this.newRecord!.breeds[breed.id]) this.newRecord!.breeds[breed.id] = 0;
+
     this.selectedBreed = breed;
-
-  }
-
-  public increaseAddCounter() {
-    if (this.selectedBreed) this.addCounter++;
-  }
-
-  public decreaseAddCounter() {
-    if (this.selectedBreed && this.addCounter > 0) this.addCounter--;
-  }
-
-  public addBreedToRecord() {
-    if (this.addCounter === 0) {
-      delete(this.newRecord!.breeds[this.selectedBreed!.id]);
-      return;
-    };
-
-    this.newRecord!.breeds[this.selectedBreed!.id] = this.addCounter;
-    setTimeout(() => this.addCounter = 0, 200);
+    this.newRecord!.breeds[breed.id]++;
   }
 
   public removeBreedFromRecord(breed: Breed) {
