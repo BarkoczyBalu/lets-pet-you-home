@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Breed } from 'src/interfaces/breed';
 import { Record } from 'src/interfaces/record';
 import { AuthService } from '../services/auth.service';
+import { NotificationService } from '../services/notification.service';
 
 declare var bootstrap: any;
 
@@ -139,7 +140,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-    public petService: PetService
+    public petService: PetService,
+    private notificationService: NotificationService
   ) { 
     this.subscriptions.push(this.petService.getPets().subscribe((data) => {
       this.pets = data;
@@ -185,19 +187,44 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public addRecord() {
-    delete(this.newRecord.location);
-    navigator.geolocation.getCurrentPosition(this.allowedPosition, this.deniedPosition);
-  }
+    const options = {
+      enableHighAccuracy: false,
+      timeout: 5000,
+      maximumAge: 3600000,
+    };
 
-  private allowedPosition = (pos: GeolocationPosition) => {
-    this.newRecord.location = { lat: pos.coords.latitude, long: pos.coords.longitude };
+    if (this.newRecord.location) delete(this.newRecord.location);
+    // navigator.geolocation.watchPosition(this.allowedPosition, this.deniedPosition, options);
     this.deniedPosition();
   }
+
+  // private allowedPosition = (pos: GeolocationPosition) => {
+  //   this.newRecord.location = { lat: pos.coords.latitude, long: pos.coords.longitude };
+  //   this.deniedPosition();
+  // }
   
   private deniedPosition = () => {
     this.petService.addRecord(this.newRecord, new Date().toISOString());
     this.newRecord.breeds = {};
     this.petService.getUserPets(this.pets);
+    setTimeout(() => {
+      const milestones = this.pets.map((pet) => this.closestMilestone(pet.total, 50));
+      this.pets.forEach((pet, index) => {
+        if (milestones[index] && pet.total >= milestones[index]) this.notificationService.show(`Good job! You have collected ${milestones[index]} ${pet.name.toLowerCase()}`);
+        const breedMilestones = pet.ownedBreeds!.map((breed) => this.closestMilestone(breed.counter!, 25));
+        if (pet.ownedBreeds) pet.ownedBreeds.forEach((breed, index) => {
+          if (breedMilestones[index] && breed.counter! >= breedMilestones[index]) this.notificationService.show(`Good job! You have collected ${breedMilestones[index]} ${breed.name}s`);
+        });
+      });
+    }, 1000);
+  }
+
+  private closestMilestone(totalBefore: number, divider: number = 50) {
+      const q = totalBefore / divider;
+      const n1 = divider * Math.ceil(q);
+      const n2 = (totalBefore * divider) > 0 ? (divider * (q + 1)) : (divider * (q - 1));
+
+      return Math.abs(totalBefore - n1) < Math.abs(totalBefore - n2) ? n1 : n2;
   }
 
   public changeToBreedView(pet: Pet) {
@@ -216,6 +243,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const timelineModal = new bootstrap.Modal(document.getElementById('timelineModal'), {});
     timelineModal.show();
+  }
+
+  public showNotification() {
+    this.notificationService.show('Test');
   }
 
   public ngOnDestroy(): void {

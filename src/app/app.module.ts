@@ -14,7 +14,9 @@ import { NavComponent } from './nav/nav.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { NumberToArrayPipe } from './pipes/number-to-array.pipe';
+import { NotificationComponent } from './notification/notification.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     NavComponent,
     LoginComponent,
     RegisterComponent,
-    NumberToArrayPipe
+    NumberToArrayPipe,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFireAnalyticsModule,
     AngularFirestoreModule,
     ReactiveFormsModule,
+    NgbToastModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

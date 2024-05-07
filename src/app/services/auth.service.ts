@@ -24,7 +24,7 @@ export class AuthService {
 
     onAuthStateChanged(this.fireAuth, (user) => {
       if (user) {
-        this.user = this.fireAuth.currentUser;
+        this.user = user;
         this.router.navigate(['home']);
       } else {
         this.router.navigate(['']);

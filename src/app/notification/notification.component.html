@@ -1,0 +1,25 @@
+<ngb-toast
+  *ngFor="let toast of notificationService.toasts" 
+  class="toast mb-1" 
+  [autohide]="true" [delay]="toast.delay || 5000"
+  (hidden)="notificationService.remove(toast)"
+>
+  <div class="d-flex align-items-center">
+    <div class="toast-icon" [ngSwitch]="toast.type" [ngClass]="toast.type">
+      <i *ngSwitchCase="'achievement'" class="fa-solid fa-trophy"></i>
+      <i *ngSwitchCase="'success'" class="fa-solid fa-check"></i>
+      <i *ngSwitchCase="'warning'" class="fa-solid fa-triangle-exclamation"></i>
+      <i *ngSwitchCase="'error'" class="fa-solid fa-xmark"></i>
+    </div>
+    <div class="ms-2 d-flex flex-column">
+      <span class="toast-headline" [ngSwitch]="toast.type" [ngClass]="toast.type">
+        <strong *ngSwitchCase="'achievement'">Achievement!</strong>
+        <strong *ngSwitchCase="'success'">Success!</strong>
+        <strong *ngSwitchCase="'warning'">Warning!</strong>
+        <strong *ngSwitchCase="'error'">Error!</strong>
+      </span>
+      <span class="toast-content">{{toast.content}}</span>
+    </div>
+  </div>
+  <div class="toast-line" [ngClass]="toast.type"></div>
+</ngb-toast>

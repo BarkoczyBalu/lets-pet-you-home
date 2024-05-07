@@ -54,10 +54,10 @@ main {
   
         &-selected {
           background-color: white;
-          color: $secondary-color;
+          color: $secondary;
   
           i {
-            color: $secondary-color;
+            color: $secondary;
           }
         }
       }
@@ -116,7 +116,7 @@ main {
           background-color: white;
   
           .card-title {
-            color: $primary-color;
+            color: $primary;
           }
         }
       }
@@ -129,7 +129,7 @@ main {
     margin: auto;
     width: auto;
     max-width: 100%;
-    background-color: $secondary-color;
+    background-color: $secondary;
     
     .divider {
       width: 60%;
@@ -180,7 +180,7 @@ main {
         width: 1rem;
         border: 2px solid white;
         border-radius: 50%;
-        background-color: $primary-color;
+        background-color: $primary;
       }
   
       &-connector {

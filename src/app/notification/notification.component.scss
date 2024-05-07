@@ -1,0 +1,91 @@
+@import '../../scss/variables.scss';
+
+// $types: achievement, success, warning, error;
+
+.toast {
+  background-color: rgba($white, 0.9);
+
+  &-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+
+  &-headline {
+    font-size: 16px;
+  }
+
+  &-content {
+    color: rgba($black, 0.5);
+  }
+
+  &-line {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    width: 1rem;
+    height: 69px;
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+
+  // @each $type in $types {
+  //   .#{$type} {
+  //     &.toast-icon, &.toast-line {
+  //       background-color: rgba(#{$type}, 0.2);
+  //     }
+  
+  //     i, strong {
+  //       color: $type;
+  //     }
+  //   }
+  // }
+
+  .achievement {
+    &.toast-icon, &.toast-line {
+      background-color: rgba($achievement, 0.2);
+    }
+
+    i, strong {
+      color: $achievement;
+    }
+  }
+
+  .success {
+    &.toast-icon, &.toast-line {
+      background-color: rgba($success, 0.2);
+    }
+
+    i, strong {
+      color: $success;
+    }
+  }
+
+  .warning {
+    &.toast-icon, &.toast-line {
+      background-color: rgba($warning, 0.2);
+    }
+
+    i, strong {
+      color: $warning;
+    }
+  }
+
+  .error {
+    &.toast-icon, &.toast-line {
+      background-color: rgba($error, 0.2);
+    }
+
+    i, strong {
+      color: $error;
+    }
+  }
+}
