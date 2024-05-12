@@ -23,7 +23,7 @@
 <!-- Offcanvas -->
 <div class="offcanvas offcanvas-bottom bg-primary" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
-    <input #searchInput type="text" class="form-control" placeholder="I would like to pet home a..." (input)="searchBreed($event)">
+    <input #searchInput type="text" class="form-control" placeholder="I would like to pet home a..." (input)="searchBreed($event)" (keyup.enter)="searchInput.blur()">
     <ng-container class="btn-group dropup">
       <a class="searchbar-icon" (click)="isSearching ? clearSearch() : showPetsDropdown()">
         <i [class]="isSearching ? 'text-error fa-solid fa-xmark' : 'text-primary fa-solid fa-' + selectedPetBadge.icon"></i>

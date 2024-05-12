@@ -155,6 +155,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   public searchBreed(event: any) {
     const key = event.target.value.toLowerCase();
     this.isSearching = !!key.length;
+    this.petsDropup!.nativeElement.style.display = 'none';
 
     this.filteredBreeds = this.selectedPetBadge?.breeds.filter((breed) => breed.name.toLowerCase().includes(key));
   }
