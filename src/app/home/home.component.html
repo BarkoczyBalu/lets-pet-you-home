@@ -26,7 +26,7 @@
     <input #searchInput type="text" class="form-control" placeholder="I would like to pet home a..." (input)="searchBreed($event)">
     <ng-container class="btn-group dropup">
       <a class="searchbar-icon" (click)="isSearching ? clearSearch() : showPetsDropdown()">
-        <i [class]="isSearching ? 'text-error fa-solid fa-xmark' : 'text-primary fa-solid fa-paw'"></i>
+        <i [class]="isSearching ? 'text-error fa-solid fa-xmark' : 'text-primary fa-solid fa-' + selectedPetBadge.icon"></i>
       </a>
       <ul #petsDropup class="pets-dropup" [style.display]="'none'">
         <li *ngFor="let pet of pets; let i = index"
