@@ -5,15 +5,13 @@
 @import '@fortawesome/fontawesome-free/scss/brands.scss';
 @import './scss/variables';
 
-//Importing Bootstrap and changing theme colors
-$primary: #735630;
-$secondary: #6E7953;
-$danger: #dc3545;
-
 $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
-  "danger": $danger,
+  "achievement": $achievement,
+  "success": $success,
+  "warning": $warning,
+  "error": $error,
 );
 
 @import 'bootstrap/scss/bootstrap';

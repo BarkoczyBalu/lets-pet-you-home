@@ -23,47 +23,54 @@
 <!-- Offcanvas -->
 <div class="offcanvas offcanvas-bottom bg-primary" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
-    <div class="badge-list">
-      <ng-container *ngFor="let pet of pets">
-        <span  
-          *ngIf="pet.breeds && pet.breeds.length > 0"
-          [ngClass]="{'badge-selected': selectedPetBadge.id === pet.id, 'bg-secondary': selectedPetBadge.id !== pet.id}" 
-          class="badge rounded-pill"
-          (click)="changePets(pet.id)">
-          <i [class]="'fa-solid fa-' + (pet.icon ?? 'paw')"></i>
+    <input #searchInput type="text" class="form-control" placeholder="I would like to pet home a..." (input)="searchBreed($event)">
+    <ng-container class="btn-group dropup">
+      <a class="searchbar-icon" (click)="isSearching ? clearSearch() : showPetsDropdown()">
+        <i [class]="isSearching ? 'text-error fa-solid fa-xmark' : 'text-primary fa-solid fa-paw'"></i>
+      </a>
+      <ul #petsDropup class="pets-dropup" [style.display]="'none'">
+        <li *ngFor="let pet of pets; let i = index"
+          class="pets-dropup-item"
+          [style.animation-delay]="60*(pets.length - i) + 'ms'" 
+          (click)="changePets(pet.id)"
+        >
           {{ pet.name }}
-        </span>
+          <i [class]="'fa-solid fa-' + (pet.icon ?? 'paw')"></i>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <div class="breed-card-row">
+      <ng-container *ngIf="filteredBreeds.length">
+        <div 
+          *ngFor="let breed of filteredBreeds"
+          class="card text-center text-white" 
+          [ngClass]="{'card-selected': newRecord.breeds[breed.id] > 0}" 
+        >
+          <div (click)="addBreedToRecord(breed)">
+            <img [src]="breed.img" class="card-img-top rounded-circle">
+            <div class="card-body">
+              <h5 class="card-title">{{ breed.name }}</h5>
+            </div>
+          </div>
+          <span *ngIf="newRecord.breeds[breed.id]" [ngClass]="newRecord.breeds[breed.id] > 9 ? 'rounded-pill' : 'rounded-circle'" class="position-absolute translate-middle badge badge-counter bg-secondary">
+            {{ newRecord.breeds[breed.id] }}
+          </span>
+          <span 
+            *ngIf="newRecord.breeds[breed.id]" 
+            class="position-absolute top-0 start-100 translate-middle badge badge-delete rounded-circle bg-error" 
+            (click)="removeBreedFromRecord(breed)"
+          >
+            <i class="fa-solid fa-close"></i>
+          </span>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!filteredBreeds.length">
+        <div style="height: 210px;" class="w-100 d-flex justify-content-center align-items-center text-white">No result found</div>
       </ng-container>
     </div>
-  </div>
-  <div class="offcanvas-body">
-    <div class="breed-card-row">
-      <div 
-        *ngFor="let breed of selectedPetBadge?.breeds"
-        class="card text-center text-white" 
-        [ngClass]="{'card-selected': newRecord.breeds[breed.id] > 0}" 
-      >
-        <div (click)="addBreedToRecord(breed)">
-          <img [src]="breed.img" class="card-img-top rounded-circle">
-          <div class="card-body">
-            <h5 class="card-title">{{ breed.name }}</h5>
-          </div>
-        </div>
-        <span *ngIf="newRecord.breeds[breed.id]" [ngClass]="newRecord.breeds[breed.id] > 9 ? 'rounded-pill' : 'rounded-circle'" class="position-absolute translate-middle badge badge-counter bg-secondary">
-          {{ newRecord.breeds[breed.id] }}
-        </span>
-        <span 
-          *ngIf="newRecord.breeds[breed.id]" 
-          class="position-absolute top-0 start-100 translate-middle badge badge-delete rounded-circle bg-danger" 
-          (click)="removeBreedFromRecord(breed)"
-        >
-          <i class="fa-solid fa-close"></i>
-        </span>
-      </div>
-    </div>
-    <div class="d-grid">
-      <button class="btn btn-secondary" data-bs-dismiss="offcanvas" [disabled]="newRecordBreedsLength < 1" (click)="addRecord()">Add</button>
-    </div>
+    <button class="btn btn-secondary flex-grow-1 mb-3" data-bs-dismiss="offcanvas" [disabled]="newRecordBreedsLength < 1" (click)="addRecord()">Add</button>
   </div>
 </div>
 

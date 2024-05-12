@@ -42,23 +42,48 @@ main {
   .offcanvas-header {
     padding-bottom: 0;
 
-    .badge-list {
-      display: flex;
-      gap: 1rem;
+    .searchbar-icon {
+      position: absolute;
+      right: 1.5rem;
+    }
+
+    .pets-dropup {
+      // display: none;
+      list-style: none;
+      position: absolute;
+      right: 1.5rem;
+      top: 0;
+      max-height: 9rem;
+      transform: translateY(-100%);
+      text-align: right;
       overflow-y: auto;
-  
-      .badge {
-        font-size: 1.25rem;
-        padding: 1.2rem;
-        cursor: pointer;
-  
-        &-selected {
-          background-color: white;
-          color: $secondary;
-  
-          i {
-            color: $secondary;
-          }
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &-item {
+        opacity: 0;
+        padding-bottom: 0.5rem;
+        animation: scaleZ 300ms ease-in-out forwards;
+        transform-origin: top center;
+      }
+
+      @keyframes scaleZ {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        
+        80% {
+          transform: scale(1.07);
+        }
+      
+        100% {
+          opacity: 1;
+          transform: scale(1);
         }
       }
     }
@@ -120,6 +145,10 @@ main {
           }
         }
       }
+    }
+
+    button {
+      font-size: 1.25rem;
     }
   }
 }

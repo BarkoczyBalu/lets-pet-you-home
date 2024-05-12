@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Pet } from 'src/interfaces/pet';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Breed } from 'src/interfaces/breed';
 import { Record } from 'src/interfaces/record';
@@ -38,32 +38,40 @@ export class PetService {
     return 0;
   };
 
-  public async getUserPets(allPets: Array<Pet>): Promise<any> {
+  public getUserPets(): Observable<any> {
     this.recordsCollection = this.afs.collection<Record>('records', ref => ref.where('userId', "==", this.authService.user?.uid));
     let userBreeds: any = {};
 
-    return this.recordsCollection.get().pipe(
-      map((records) => records.docs.forEach((record) => {
-        const recordBreeds = record.data().breeds;
+    return this.getPets().pipe(
+      switchMap((pets: Pet[]) => {
+        return this.recordsCollection.get().pipe(
+          map((records) => {
+            records.docs.forEach((record) => {
+              const recordBreeds = record.data().breeds;
 
-        Object.keys(recordBreeds).forEach((breedId) => {
-          if ((Object.keys(userBreeds)).includes(breedId)) {
-            userBreeds[breedId] += recordBreeds[breedId];
-          } else {
-            userBreeds[breedId] = recordBreeds[breedId];
-          }
-        });
+              Object.keys(recordBreeds).forEach((breedId) => {
+                if ((Object.keys(userBreeds)).includes(breedId)) {
+                  userBreeds[breedId] += recordBreeds[breedId];
+                } else {
+                  userBreeds[breedId] = recordBreeds[breedId];
+                }
+              });
+            });
 
-        allPets.forEach((pet) => {
-          pet.breeds.forEach((breed: Breed) => {
-            if (breed.counter) delete(breed.counter);
-            if (userBreeds[breed.id]) breed.counter = userBreeds[breed.id];
-          });
-          pet.ownedBreeds = pet.breeds.filter(breed => breed.counter).sort(this.sortByCounter);
-          pet.total = pet.breeds.reduce((sum, breed) => breed.counter ? (sum + breed.counter) : sum, 0);
-        });
-      }))
-    ).subscribe(() => allPets);
+            pets.forEach((pet) => {
+              pet.breeds.forEach((breed: Breed) => {
+                if (breed.counter) delete (breed.counter);
+                if (userBreeds[breed.id]) breed.counter = userBreeds[breed.id];
+              });
+              pet.ownedBreeds = pet.breeds.filter(breed => breed.counter).sort(this.sortByCounter);
+              pet.total = pet.breeds.reduce((sum, breed) => breed.counter ? (sum + breed.counter) : sum, 0);
+            });
+
+            return pets;
+          })
+        );
+      })
+    );
   }
 
   public getPets(): Observable<Array<Pet>> {
@@ -121,9 +129,6 @@ export class PetService {
 
   public async addRecord(record: Record, date: string) {
     await this.afs.collection('records').doc(date).set(record);
-
-    // records: {picture, time, place, breeds, userId}
-    // user: breeds: {breedId: number}
   }
 
   public createBreed() {

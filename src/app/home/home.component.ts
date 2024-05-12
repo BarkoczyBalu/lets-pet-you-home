@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } fr
 import { Pet } from '../../interfaces/pet';
 import { PetService } from '../services/pet.service';
 import { Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Breed } from 'src/interfaces/breed';
 import { Record } from 'src/interfaces/record';
 import { AuthService } from '../services/auth.service';
@@ -14,119 +15,24 @@ declare var bootstrap: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
-  private subscriptions: Array<Subscription> = [];
+export class HomeComponent implements OnInit, AfterViewInit {
   @ViewChild('offcanvasBottom') offcanvasBottom?: ElementRef;
-  @ViewChild('counterModal') counterModal?: ElementRef;
   @ViewChild('timelineModal') timelineModal?: ElementRef;
+  @ViewChild('searchInput') searchInput?: ElementRef;
+  @ViewChild('petsDropup') petsDropup?: ElementRef;
   
-  // Mock data
-  // public pets: Array<Pet> = [
-  //   {
-  //     id: '1',
-  //     name: 'Dogs',
-  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-  //     total: 20,
-  //     breeds: [
-  //       {
-  //         name: 'Samoyed',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //       {
-  //         name: 'Shiba Inu',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Cats',
-  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-  //     total: 10,
-  //     breeds: [
-  //       {
-  //         name: 'Ordinary House Cat',
-  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  //   {
-  //     id: '3',
-  //     name: 'Dogs',
-  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-  //     total: 20,
-  //     breeds: [
-  //       {
-  //         name: 'Samoyed',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //       {
-  //         name: 'Shiba Inu',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  //   {
-  //     id: '4',
-  //     name: 'Cats',
-  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-  //     total: 10,
-  //     breeds: [
-  //       {
-  //         name: 'Ordinary House Cat',
-  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  //   {
-  //     id: '5',
-  //     name: 'Dogs',
-  //     img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80',
-  //     total: 20,
-  //     breeds: [
-  //       {
-  //         name: 'Samoyed',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //       {
-  //         name: 'Shiba Inu',
-  //         img: 'https://images.unsplash.com/photo-1592754862816-1a21a4ea2281?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  //   {
-  //     id: '6',
-  //     name: 'Cats',
-  //     img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80',
-  //     total: 10,
-  //     breeds: [
-  //       {
-  //         name: 'Ordinary House Cat',
-  //         img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2535&q=80'
-  //       },
-  //     ],
-  //     isDeletable: false,
-  //     isFavorite: true
-  //   },
-  // ];
-  public pets: Array<Pet> = [];
+  public pets: Pet[] = [];
   public view: 'pet' | 'breed' = 'pet';
 
+  // TODO: Come up with new naming convention
   public selectedPet!: Pet;
   public selectedPetBadge!: Pet;
   public selectedBreed?: Breed;
   public selectedBreedRecords?: Record[];
-  public selectedBreeds: Array<Breed> = [];
+  public selectedBreeds: Breed[] = [];
+  
+  public isSearching: boolean = false;
+  public filteredBreeds: Breed[] = [];
   public newRecord: Record = {
     userId: '',
     breeds: {}
@@ -142,16 +48,16 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     public authService: AuthService,
     public petService: PetService,
     private notificationService: NotificationService
-  ) { 
-    this.subscriptions.push(this.petService.getPets().subscribe((data) => {
-      this.pets = data;
-      this.selectedPetBadge = data.find(pet => pet.name === 'Dogs') ?? data[0];
-      this.petService.getUserPets(data);
-    }));
-    this.subscriptions.push(this.petService.viewState.subscribe(view => {
+  ) {
+    this.petService.getUserPets().pipe(takeUntilDestroyed()).subscribe((pets: Pet[]) => {
+      this.pets = pets;
+      this.selectedPetBadge = pets.find((pet) => pet.name === 'Dogs') ?? pets[0];
+      this.filteredBreeds = this.selectedPetBadge.breeds;
+    });
+    this.petService.viewState.pipe(takeUntilDestroyed()).subscribe(view => {
       if (view === 'pet') this.selectedPetBadge = this.pets.find(pet => pet.name === 'Dogs') ?? this.pets[0];
       this.view = view;
-    }));
+    });
   }
 
   public ngOnInit(): void {
@@ -173,6 +79,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public changePets(id: string) {
     const pet = this.pets.find((pet) => pet.id === id) ?? this.pets[0];
     this.selectedPetBadge = pet;
+    this.filteredBreeds = this.selectedPetBadge.breeds;
   }
 
   public addBreedToRecord(breed: Breed) {
@@ -206,17 +113,19 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   private deniedPosition = () => {
     this.petService.addRecord(this.newRecord, new Date().toISOString());
     this.newRecord.breeds = {};
-    this.petService.getUserPets(this.pets);
-    setTimeout(() => {
-      const milestones = this.pets.map((pet) => this.closestMilestone(pet.total, 50));
+    const milestones = this.pets.map((pet) => this.closestMilestone(pet.total, 50));
+    const breedMilestones = this.pets.map((pet) => pet.ownedBreeds!.map((breed) => this.closestMilestone(breed.counter!, 25)));
+    const sub = this.petService.getUserPets().subscribe((pets: Pet[]) => {
+      this.pets = pets;
       this.pets.forEach((pet, index) => {
-        if (milestones[index] && pet.total >= milestones[index]) this.notificationService.show(`Good job! You have collected ${milestones[index]} ${pet.name.toLowerCase()}`);
-        const breedMilestones = pet.ownedBreeds!.map((breed) => this.closestMilestone(breed.counter!, 25));
-        if (pet.ownedBreeds) pet.ownedBreeds.forEach((breed, index) => {
-          if (breedMilestones[index] && breed.counter! >= breedMilestones[index]) this.notificationService.show(`Good job! You have collected ${breedMilestones[index]} ${breed.name}s`);
+        if (milestones[index] && pet.total >= milestones[index]) this.notificationService.show(`Pawntastic! You have collected ${milestones[index]} ${pet.name.toLowerCase()}`);
+        if (pet.ownedBreeds) pet.ownedBreeds.forEach((breed, breedIndex) => {
+          if (breedMilestones[index][breedIndex] && breed.counter! >= breedMilestones[index][breedIndex]) this.notificationService.show(`Pawntastic! You have collected ${breedMilestones[index][breedIndex]} ${breed.name}s`);
         });
       });
-    }, 1000);
+      sub.unsubscribe();
+    });
+
   }
 
   private closestMilestone(totalBefore: number, divider: number = 50) {
@@ -235,21 +144,29 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   public openBreedRecords(breed: Breed) {
     this.selectedBreed = breed;
 
-    this.subscriptions.push(
-      this.petService.getBreedRecords(breed.id).subscribe((data) => {
-        this.selectedBreedRecords = data;
-      })
-    );
+    this.petService.getBreedRecords(breed.id).pipe(takeUntilDestroyed()).subscribe((data) => {
+      this.selectedBreedRecords = data;
+    });
 
     const timelineModal = new bootstrap.Modal(document.getElementById('timelineModal'), {});
     timelineModal.show();
   }
 
-  public showNotification() {
-    this.notificationService.show('Test');
+  public searchBreed(event: any) {
+    const key = event.target.value.toLowerCase();
+    this.isSearching = !!key.length;
+
+    this.filteredBreeds = this.selectedPetBadge?.breeds.filter((breed) => breed.name.toLowerCase().includes(key));
   }
 
-  public ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  public clearSearch() {
+    this.searchInput!.nativeElement.value = '';
+    this.searchBreed({target: {value: ''}});
+    this.searchInput?.nativeElement.focus();
+  }
+
+  public showPetsDropdown() {
+    const currentDisplayValue = this.petsDropup!.nativeElement.style.display;
+    this.petsDropup!.nativeElement.style.display = currentDisplayValue === 'none' ? 'block' : 'none';
   }
 }
